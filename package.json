@@ -14,7 +14,8 @@
     "format": "prettier --write .",
     "build": "npm run build -w @aeroguard/shared && npm run build -w @aeroguard/api -w @aeroguard/worker -w @aeroguard/simulator",
     "test": "npm run test -w @aeroguard/api",
-    "typecheck": "npm run typecheck -w @aeroguard/api"
+    "typecheck": "npm run typecheck -w @aeroguard/api",
+    "dev:api": "npm run dev -w @aeroguard/api"
   },
   "type": "module",
   "devDependencies": {
