@@ -1,3 +1,4 @@
+import { Types } from 'mongoose';
 import { envelope } from '../../common/pagination.js';
 import { AppError } from '../../middleware/errorHandler.js';
 import { ComponentModel } from './component.model.js';
@@ -33,4 +34,32 @@ export async function getComponent(id: string) {
   const component = await ComponentModel.findById(id);
   if (!component) throw new AppError(404, 'NOT_FOUND', 'Component not found');
   return component;
+}
+
+export interface ComponentRef {
+  id: string;
+  aircraftId: string | null;
+  name: string;
+}
+
+// Lightweight lookups so other modules never touch the component model.
+export async function componentRefs(ids: string[]): Promise<ComponentRef[]> {
+  const docs = await ComponentModel.find(
+    { _id: { $in: ids.map((id) => new Types.ObjectId(id)) } },
+    { aircraftId: 1, name: 1 },
+  ).lean();
+  return docs.map((d) => ({
+    id: String(d._id),
+    aircraftId: d.aircraftId ? String(d.aircraftId) : null,
+    name: d.name,
+  }));
+}
+
+export async function listAllRefs(): Promise<ComponentRef[]> {
+  const docs = await ComponentModel.find({ status: 'INSTALLED' }, { aircraftId: 1, name: 1 }).lean();
+  return docs.map((d) => ({
+    id: String(d._id),
+    aircraftId: d.aircraftId ? String(d.aircraftId) : null,
+    name: d.name,
+  }));
 }

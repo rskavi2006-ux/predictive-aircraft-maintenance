@@ -11,5 +11,6 @@
 | [0007](0007-append-only-audit-log.md) | Append-only audit log | Accepted |
 | [0008](0008-ui-library-shadcn-tailwind.md) | UI library: shadcn/ui + Tailwind CSS | Accepted |
 | [0009](0009-prediction-seam.md) | Prediction seam | Accepted |
+| [0010](0010-reduced-scope-core-loop.md) | Reduced scope for the core loop | Accepted (temporary) |
 
 Template: [0000-template.md](0000-template.md)

@@ -10,6 +10,8 @@ import { componentsRouter } from './modules/components/components.routes.js';
 import { fleetRouter } from './modules/fleet/fleet.routes.js';
 import { healthRouter } from './modules/health/health.routes.js';
 import type { Check } from './modules/health/health.service.js';
+import { scoringRouter } from './modules/scoring/scoring.routes.js';
+import { telemetryRouter } from './modules/telemetry/telemetry.routes.js';
 import { usersRouter } from './modules/users/users.routes.js';
 
 export interface AppDeps {
@@ -33,6 +35,8 @@ export function createApp(deps: AppDeps) {
   app.use('/api/v1/audit', auditRouter());
   app.use('/api/v1/aircraft', fleetRouter());
   app.use('/api/v1/components', componentsRouter());
+  app.use('/api/v1/telemetry', telemetryRouter());
+  app.use('/api/v1/health-scores', scoringRouter());
 
   app.use(notFound);
   app.use(errorHandler(deps.logger));
