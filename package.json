@@ -1,8 +1,28 @@
-﻿{
+{
   "name": "aeroguard",
   "private": true,
   "version": "0.1.0",
-  "workspaces": ["apps/*", "packages/*"],
-  "engines": { "node": ">=22" },
-  "scripts": {}
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "build": "npm run build -w @aeroguard/shared && npm run build -w @aeroguard/api -w @aeroguard/worker -w @aeroguard/simulator"
+  },
+  "type": "module",
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@types/node": "^26.6.4",
+    "eslint": "^10.12.0",
+    "eslint-config-prettier": "^10.1.8",
+    "globals": "^17.13.0",
+    "prettier": "^3.9.9",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.71.0"
+  }
 }
