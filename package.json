@@ -11,7 +11,8 @@
   },
   "scripts": {
     "lint": "eslint .",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "build": "npm run build -w @aeroguard/shared && npm run build -w @aeroguard/api -w @aeroguard/worker -w @aeroguard/simulator"
   },
   "type": "module",
   "devDependencies": {
