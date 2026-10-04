@@ -4,6 +4,7 @@ import mongoose from 'mongoose';
 import { pino } from 'pino';
 import { createApp } from './app.js';
 import { loadEnv } from './config/env.js';
+import { HEARTBEAT_KEY } from '@aeroguard/shared';
 
 // Local dev: load the repo-root .env if it exists (in production, env comes from the platform).
 try {
@@ -50,6 +51,11 @@ const checks = {
     const db = mongoose.connection.db;
     if (!db) throw new Error('not connected');
     await db.command({ ping: 1 });
+  },
+  worker: async () => {
+    // The worker refreshes this key every 5s with a 15s TTL; a missing key means it is not running.
+    const beat = await redis.get(HEARTBEAT_KEY);
+    if (!beat) throw new Error('no worker heartbeat');
   },
   redis: async () => {
     await redis.ping();
