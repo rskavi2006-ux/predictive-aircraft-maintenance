@@ -4,8 +4,13 @@ import helmet from 'helmet';
 import type { Logger } from 'pino';
 import { errorHandler, notFound } from './middleware/errorHandler.js';
 import { requestContext } from './middleware/requestContext.js';
+import { auditRouter } from './modules/audit/audit.routes.js';
+import { authRouter } from './modules/auth/auth.routes.js';
+import { componentsRouter } from './modules/components/components.routes.js';
+import { fleetRouter } from './modules/fleet/fleet.routes.js';
 import { healthRouter } from './modules/health/health.routes.js';
 import type { Check } from './modules/health/health.service.js';
+import { usersRouter } from './modules/users/users.routes.js';
 
 export interface AppDeps {
   logger: Logger;
@@ -23,6 +28,11 @@ export function createApp(deps: AppDeps) {
   app.use(express.json({ limit: '1mb' }));
 
   app.use('/api/v1/health', healthRouter(deps.checks, deps.healthTimeoutMs));
+  app.use('/api/v1/auth', authRouter());
+  app.use('/api/v1/users', usersRouter());
+  app.use('/api/v1/audit', auditRouter());
+  app.use('/api/v1/aircraft', fleetRouter());
+  app.use('/api/v1/components', componentsRouter());
 
   app.use(notFound);
   app.use(errorHandler(deps.logger));
