@@ -13,7 +13,9 @@ import { healthRouter } from './modules/health/health.routes.js';
 import type { Check } from './modules/health/health.service.js';
 import { scoringRouter } from './modules/scoring/scoring.routes.js';
 import { telemetryRouter } from './modules/telemetry/telemetry.routes.js';
+import { schedulingRouter } from './modules/scheduling/scheduling.routes.js';
 import { tasksRouter } from './modules/tasks/tasks.routes.js';
+import { workOrdersRouter } from './modules/workorders/workorders.routes.js';
 import { usersRouter } from './modules/users/users.routes.js';
 
 export interface AppDeps {
@@ -41,6 +43,8 @@ export function createApp(deps: AppDeps) {
   app.use('/api/v1/health-scores', scoringRouter());
   app.use('/api/v1/alerts', alertsRouter());
   app.use('/api/v1/tasks', tasksRouter());
+  app.use('/api/v1/scheduling', schedulingRouter());
+  app.use('/api/v1/work-orders', workOrdersRouter());
 
   app.use(notFound);
   app.use(errorHandler(deps.logger));
