@@ -4,6 +4,7 @@ import { METRICS, type Reading } from '../../common/metrics.js';
 import { AppError } from '../../middleware/errorHandler.js';
 import { componentRefs, listAllRefs } from '../components/components.service.js';
 import { listAircraft } from '../fleet/fleet.service.js';
+import { evaluateAlert } from '../alerts/alerts.service.js';
 import { scoreComponent } from '../scoring/scoring.service.js';
 import type { ReadingInput } from './telemetry.schema.js';
 import { ReadingModel } from './telemetry.model.js';
@@ -69,9 +70,11 @@ export async function ingestBatch(readings: ReadingInput[]) {
 
   const result = await ReadingModel.bulkWrite(ops, { ordered: false });
   const inserted = result.upsertedCount;
+  let alertsCreated = 0;
 
   for (const id of ids) {
-    await scoreComponent(id, known.get(id)?.aircraftId ?? null, await recentReadings(id, 30));
+    const prediction = await scoreComponent(id, known.get(id)?.aircraftId ?? null, await recentReadings(id, 30));
+    if (await evaluateAlert(id, prediction)) alertsCreated += 1;
   }
 
   return {
@@ -79,6 +82,7 @@ export async function ingestBatch(readings: ReadingInput[]) {
     inserted,
     duplicates: readings.length - inserted,
     componentsScored: ids.length,
+    alertsCreated,
   };
 }
 

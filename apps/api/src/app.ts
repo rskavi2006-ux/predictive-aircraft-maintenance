@@ -4,6 +4,7 @@ import helmet from 'helmet';
 import type { Logger } from 'pino';
 import { errorHandler, notFound } from './middleware/errorHandler.js';
 import { requestContext } from './middleware/requestContext.js';
+import { alertsRouter } from './modules/alerts/alerts.routes.js';
 import { auditRouter } from './modules/audit/audit.routes.js';
 import { authRouter } from './modules/auth/auth.routes.js';
 import { componentsRouter } from './modules/components/components.routes.js';
@@ -12,6 +13,7 @@ import { healthRouter } from './modules/health/health.routes.js';
 import type { Check } from './modules/health/health.service.js';
 import { scoringRouter } from './modules/scoring/scoring.routes.js';
 import { telemetryRouter } from './modules/telemetry/telemetry.routes.js';
+import { tasksRouter } from './modules/tasks/tasks.routes.js';
 import { usersRouter } from './modules/users/users.routes.js';
 
 export interface AppDeps {
@@ -37,6 +39,8 @@ export function createApp(deps: AppDeps) {
   app.use('/api/v1/components', componentsRouter());
   app.use('/api/v1/telemetry', telemetryRouter());
   app.use('/api/v1/health-scores', scoringRouter());
+  app.use('/api/v1/alerts', alertsRouter());
+  app.use('/api/v1/tasks', tasksRouter());
 
   app.use(notFound);
   app.use(errorHandler(deps.logger));

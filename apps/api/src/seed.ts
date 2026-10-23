@@ -3,6 +3,10 @@ import bcrypt from 'bcryptjs';
 import mongoose from 'mongoose';
 import { ComponentModel } from './modules/components/component.model.js';
 import { AircraftModel } from './modules/fleet/aircraft.model.js';
+import { AlertModel } from './modules/alerts/alert.model.js';
+import { HealthScoreModel } from './modules/scoring/scoring.model.js';
+import { TaskModel } from './modules/tasks/task.model.js';
+import { ReadingModel } from './modules/telemetry/telemetry.model.js';
 import { UserModel } from './modules/users/user.model.js';
 
 try {
@@ -42,7 +46,7 @@ await mongoose.connect(process.env.MONGO_URI ?? 'mongodb://localhost:27017/aerog
 // The audit log is never wiped.
 await mongoose.connection.dropCollection('users').catch(() => undefined); // also drops the old email-only indexes
 await UserModel.syncIndexes();
-await Promise.all([UserModel.deleteMany({}), AircraftModel.deleteMany({}), ComponentModel.deleteMany({})]);
+await Promise.all([UserModel.deleteMany({}), AircraftModel.deleteMany({}), ComponentModel.deleteMany({}), ReadingModel.deleteMany({}), HealthScoreModel.deleteMany({}), AlertModel.deleteMany({}), TaskModel.deleteMany({})]);
 
 const passwordHash = await bcrypt.hash(DEMO_PASSWORD, 10);
 await UserModel.insertMany([
