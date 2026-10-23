@@ -1,4 +1,4 @@
-﻿{
+{
   "compilerOptions": {
     "target": "ES2022",
     "module": "NodeNext",
@@ -9,6 +9,7 @@
     "forceConsistentCasingInFileNames": true,
     "declaration": true,
     "sourceMap": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "types": ["node"]
   }
 }
