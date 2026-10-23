@@ -8,7 +8,7 @@ import { getActiveUser } from '../users/users.service.js';
 import { requireAuth, type AuthUser } from './auth.middleware.js';
 import { login } from './auth.service.js';
 
-const loginSchema = z.object({ email: z.string().email(), password: z.string().min(1) });
+const loginSchema = z.object({ username: z.string().trim().min(1), password: z.string().min(1) });
 
 const loginLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
@@ -27,7 +27,7 @@ export const authRouter = () => {
     loginLimiter,
     asyncHandler(async (req, res) => {
       const body = loginSchema.parse(req.body);
-      const result = await login(body.email, body.password);
+      const result = await login(body.username, body.password);
       if (!result) throw new AppError(401, 'INVALID_CREDENTIALS', 'Invalid email or password');
       await record({
         actorId: result.user.id,

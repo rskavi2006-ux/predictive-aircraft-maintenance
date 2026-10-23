@@ -8,10 +8,17 @@ import { actorFrom, record } from '../audit/audit.service.js';
 import { requireAuth, requireRole, type AuthUser } from '../auth/auth.middleware.js';
 import { createUser, listUsers, updateUser } from './users.service.js';
 
+const usernameSchema = z
+  .string()
+  .trim()
+  .toLowerCase()
+  .regex(/^[a-z0-9._-]{3,30}$/, 'Use 3 to 30 characters: letters, digits, dot, dash or underscore');
+
 const createSchema = z
   .object({
     name: z.string().min(1),
-    email: z.string().email(),
+    username: usernameSchema,
+    email: z.string().email().optional(),
     password: z.string().min(8),
     role: z.enum(ROLES),
     licenseCategory: z.enum(LICENSE_CATEGORIES).optional(),
@@ -24,6 +31,8 @@ const createSchema = z
 const patchSchema = z.object({
   name: z.string().min(1).optional(),
   isActive: z.boolean().optional(),
+  role: z.enum(ROLES).optional(),
+  licenseCategory: z.enum(LICENSE_CATEGORIES).optional(),
 });
 
 export const usersRouter = () => {
@@ -53,17 +62,20 @@ export const usersRouter = () => {
     }),
   );
 
+  // Admin can rename, deactivate and change a user's role (an engineer needs B1 or B2).
   router.patch(
     '/:id',
     asyncHandler(async (req, res) => {
       const id = objectIdSchema.parse(String(req.params.id));
       const patch = patchSchema.parse(req.body);
       const me = res.locals.user as AuthUser;
-      if (id === me.id && patch.isActive === false) {
-        throw new AppError(400, 'BAD_REQUEST', 'You cannot deactivate your own account');
+      const changesOwnRole = patch.role !== undefined && patch.role !== me.role;
+      if (id === me.id && (patch.isActive === false || changesOwnRole)) {
+        throw new AppError(400, 'BAD_REQUEST', 'You cannot change your own role or deactivate yourself');
       }
       const { before, after } = await updateUser(id, patch);
-      await record({ ...actorFrom(res), action: 'user.update', entityType: 'User', entityId: id, before, after });
+      const action = before.role !== after.role ? 'user.role.change' : 'user.update';
+      await record({ ...actorFrom(res), action, entityType: 'User', entityId: id, before, after });
       res.json(after);
     }),
   );

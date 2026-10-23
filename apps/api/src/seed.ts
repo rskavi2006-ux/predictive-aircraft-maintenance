@@ -40,15 +40,17 @@ const TEMPLATES: Template[] = [
 await mongoose.connect(process.env.MONGO_URI ?? 'mongodb://localhost:27017/aeroguard');
 
 // The audit log is never wiped.
+await mongoose.connection.dropCollection('users').catch(() => undefined); // also drops the old email-only indexes
+await UserModel.syncIndexes();
 await Promise.all([UserModel.deleteMany({}), AircraftModel.deleteMany({}), ComponentModel.deleteMany({})]);
 
 const passwordHash = await bcrypt.hash(DEMO_PASSWORD, 10);
 await UserModel.insertMany([
-  { name: 'Admin', email: 'admin@aeroguard.dev', role: 'ADMIN', passwordHash },
-  { name: 'Planner', email: 'planner@aeroguard.dev', role: 'PLANNER', passwordHash },
-  { name: 'Auditor', email: 'auditor@aeroguard.dev', role: 'AUDITOR', passwordHash },
-  { name: 'Engineer B1', email: 'engineer.b1@aeroguard.dev', role: 'ENGINEER', licenseCategory: 'B1', passwordHash },
-  { name: 'Engineer B2', email: 'engineer.b2@aeroguard.dev', role: 'ENGINEER', licenseCategory: 'B2', passwordHash },
+  { name: 'Admin', username: 'admin', role: 'ADMIN', passwordHash },
+  { name: 'Planner', username: 'planner', role: 'PLANNER', passwordHash },
+  { name: 'Auditor', username: 'auditor', role: 'AUDITOR', passwordHash },
+  { name: 'Engineer B1', username: 'engineer.b1', role: 'ENGINEER', licenseCategory: 'B1', passwordHash },
+  { name: 'Engineer B2', username: 'engineer.b2', role: 'ENGINEER', licenseCategory: 'B2', passwordHash },
 ]);
 
 const rows = Array.from({ length: 50 }, (_, k) => {
@@ -85,5 +87,5 @@ for (const [i, ac] of aircraft.entries()) {
 }
 
 console.log(`Seeded 5 users, ${aircraft.length} aircraft, ${aircraft.length * TEMPLATES.length} components.`);
-console.log(`Demo login: any of admin@ / planner@ / auditor@ / engineer.b1@ / engineer.b2@aeroguard.dev, password ${DEMO_PASSWORD}`);
+console.log(`Demo logins (password ${DEMO_PASSWORD}): admin, planner, auditor, engineer.b1, engineer.b2`);
 await mongoose.disconnect();
