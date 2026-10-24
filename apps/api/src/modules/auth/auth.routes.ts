@@ -28,7 +28,7 @@ export const authRouter = () => {
     asyncHandler(async (req, res) => {
       const body = loginSchema.parse(req.body);
       const result = await login(body.username, body.password);
-      if (!result) throw new AppError(401, 'INVALID_CREDENTIALS', 'Invalid email or password');
+      if (!result) throw new AppError(401, 'INVALID_CREDENTIALS', 'Invalid username or password');
       await record({
         actorId: result.user.id,
         actorRole: result.user.role,
