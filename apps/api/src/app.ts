@@ -7,6 +7,7 @@ import { requestContext } from './middleware/requestContext.js';
 import { alertsRouter } from './modules/alerts/alerts.routes.js';
 import { auditRouter } from './modules/audit/audit.routes.js';
 import { authRouter } from './modules/auth/auth.routes.js';
+import { complianceRouter } from './modules/compliance/compliance.routes.js';
 import { componentsRouter } from './modules/components/components.routes.js';
 import { fleetRouter } from './modules/fleet/fleet.routes.js';
 import { healthRouter } from './modules/health/health.routes.js';
@@ -45,6 +46,7 @@ export function createApp(deps: AppDeps) {
   app.use('/api/v1/tasks', tasksRouter());
   app.use('/api/v1/scheduling', schedulingRouter());
   app.use('/api/v1/work-orders', workOrdersRouter());
+  app.use('/api/v1/compliance', complianceRouter());
 
   app.use(notFound);
   app.use(errorHandler(deps.logger));

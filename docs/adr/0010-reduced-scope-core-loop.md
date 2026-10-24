@@ -22,3 +22,4 @@ Building everything in the original order: more complete, but the core loop woul
 ## Consequences
 - Faster path to a demonstrable loop.
 - Every deferred item is tracked here and in the CHANGELOG so it is not forgotten.
+- The compliance check runs inside the API process on a timer (every 6 hours) instead of a BullMQ repeatable job. Due-soon items are reported in the summary and logs; in-app notifications are deferred.

@@ -9,3 +9,4 @@
 - Scheduling: maintenance windows (planner only), plan preview with downtime saved, confirm creates a work order and schedules tasks
 - Scheduling: maintenance windows (planner only), plan preview with downtime saved, confirm creates a work order and schedules tasks
 - Work orders: engineer start, findings and CRS sign-off with licence check; tasks DONE, compliance records and audit entries
+- Compliance: records for active tasks, overdue check with audit entries, due-soon summary, compliance list endpoints

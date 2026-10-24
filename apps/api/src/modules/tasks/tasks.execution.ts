@@ -48,3 +48,18 @@ export async function transitionTasks(ids: string[], to: TaskStatus, action: str
     });
   }
 }
+const ACTIVE: TaskStatus[] = ['PENDING', 'SCHEDULED', 'IN_PROGRESS'];
+
+export async function activeTasks(): Promise<TaskBrief[]> {
+  const docs = await TaskModel.find({ status: { $in: ACTIVE } }).lean();
+  return docs.map((d) => ({
+    id: String(d._id),
+    aircraftId: String(d.aircraftId),
+    componentId: d.componentId ? String(d.componentId) : null,
+    title: d.title,
+    sourceType: d.sourceType,
+    requiredLicense: d.requiredLicense as 'B1' | 'B2',
+    dueDate: d.estimatedDueDate,
+    status: d.status as TaskStatus,
+  }));
+}
