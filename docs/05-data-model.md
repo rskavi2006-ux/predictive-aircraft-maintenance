@@ -35,3 +35,12 @@ Alert de-duplication: while an alert for the same component and cause is OPEN, n
 | workorders | number, aircraftId, windowId, taskIds, status, findings, signedOffBy, signedOffAt | number unique; {aircraftId, status}; {windowId}; {status, createdAt -1} (work order list) |
 
 Scheduling rules: a window must start before the task due date, the crew licences must include the task licence, and the tasks must fit in the free hours (capacity minus booked). Downtime saved = (tasks in a window - 1) x setup overhead (assumption: 4 hours per window). Confirm recomputes the plan on the server, reserves capacity atomically, marks the tasks SCHEDULED and creates the work order. Without a replica set there are no multi-document transactions, so a failed step rolls the reservation back by hand.
+
+## Maintenance windows and work orders
+
+| Collection | Key fields | Indexes and why |
+|---|---|---|
+| maintenancewindows | aircraftId, registration, type (LINE/BASE/AOG), station, start, end, capacityHours, bookedHours, licences, status | {aircraftId, start} (windows of one aircraft in time order); {status, start} (scheduler reads upcoming planned windows) |
+| workorders | number, aircraftId, windowId, taskIds, status, findings, signedOffBy, signedOffAt | number unique; {aircraftId, status}; {windowId}; {status, createdAt -1} (work order list) |
+
+Scheduling rules: a window must start before the task due date, the crew licences must include the task licence, and the tasks must fit in the free hours (capacity minus booked). Downtime saved = (tasks in a window - 1) x setup overhead (assumption: 4 hours per window). Confirm recomputes the plan on the server, reserves capacity atomically, marks the tasks SCHEDULED and creates the work order. Without a replica set there are no multi-document transactions, so a failed step rolls the reservation back by hand.

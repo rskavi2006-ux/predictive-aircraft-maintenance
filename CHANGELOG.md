@@ -7,3 +7,4 @@
 - Core loop (part 1): auth and RBAC, users, audit log, fleet seed, telemetry ingest (idempotent), rule-based prediction seam, health score endpoints, telemetry simulator
 - Alerts: de-duplicated explainable alerts, engineer-only approve/reject/defer with mandatory note, task creation on approval, username login and admin role change
 - Scheduling: maintenance windows (planner only), plan preview with downtime saved, confirm creates a work order and schedules tasks
+- Scheduling: maintenance windows (planner only), plan preview with downtime saved, confirm creates a work order and schedules tasks
