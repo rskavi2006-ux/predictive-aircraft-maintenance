@@ -63,3 +63,10 @@ export async function listAllRefs(): Promise<ComponentRef[]> {
     name: d.name,
   }));
 }
+export async function markServiced(ids: string[]): Promise<void> {
+  if (ids.length === 0) return;
+  await ComponentModel.updateMany(
+    { _id: { $in: ids.map((id) => new Types.ObjectId(id)) } },
+    { $set: { lastServicedAt: new Date() } },
+  );
+}

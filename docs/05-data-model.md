@@ -44,3 +44,11 @@ Scheduling rules: a window must start before the task due date, the crew licence
 | workorders | number, aircraftId, windowId, taskIds, status, findings, signedOffBy, signedOffAt | number unique; {aircraftId, status}; {windowId}; {status, createdAt -1} (work order list) |
 
 Scheduling rules: a window must start before the task due date, the crew licences must include the task licence, and the tasks must fit in the free hours (capacity minus booked). Downtime saved = (tasks in a window - 1) x setup overhead (assumption: 4 hours per window). Confirm recomputes the plan on the server, reserves capacity atomically, marks the tasks SCHEDULED and creates the work order. Without a replica set there are no multi-document transactions, so a failed step rolls the reservation back by hand.
+
+## Compliance records
+
+| Collection | Key fields | Indexes and why |
+|---|---|---|
+| compliancerecords | aircraftId, componentId, taskId, kind (AD/MEL/LLP/PROGRAMME), reference, dueDate, status (OPEN/COMPLIED/OVERDUE), evidenceWorkOrderId, compliedAt | {status, dueDate} (dashboard: due soon and overdue); {aircraftId, status}; {taskId} unique sparse (one record per task) |
+
+Sign-off: only an ENGINEER whose licence category matches every task on the work order can sign off (CRS). Sign-off marks the tasks DONE, records lastServicedAt on the components, creates a COMPLIED compliance record with the work order as evidence, completes the window when no other work order is open on it, and writes the audit log. Component hours and cycles are not changed in the simulation (TODO: verify). Alert and programme work are tracked as PROGRAMME items (TODO: verify).

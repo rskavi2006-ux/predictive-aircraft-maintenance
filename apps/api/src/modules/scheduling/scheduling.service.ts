@@ -153,3 +153,21 @@ export async function confirmWindow(windowId: string, overheadHours: number, ctx
   });
   return { workOrder, window: reserved, plan: item };
 }
+export async function setWindowStatus(id: string, to: WindowStatus, ctx: AuditCtx) {
+  const win = await WindowModel.findById(id);
+  if (!win) throw new AppError(404, 'NOT_FOUND', 'Window not found');
+  if (win.status === to) return win; // a window can hold more than one work order
+  assertTransition(windowMachine, 'Window', win.status as WindowStatus, to);
+  const before = win.toObject();
+  win.status = to;
+  await win.save();
+  await record({
+    ...ctx,
+    action: `window.${to.toLowerCase()}`,
+    entityType: 'MaintenanceWindow',
+    entityId: id,
+    before,
+    after: win.toObject(),
+  });
+  return win;
+}

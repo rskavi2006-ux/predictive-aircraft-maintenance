@@ -12,6 +12,7 @@ const componentSchema = new Schema(
     cyclesSinceNew: { type: Number, default: 0 },
     limits: { maxFH: Number, maxFC: Number, maxCalendarDays: Number },
     installedAt: Date,
+    lastServicedAt: Date,
     status: { type: String, enum: ['INSTALLED', 'REMOVED'], default: 'INSTALLED' },
   },
   { timestamps: true },
