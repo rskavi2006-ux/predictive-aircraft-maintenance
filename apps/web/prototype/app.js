@@ -69,8 +69,7 @@ function renderLogin(app) {
     '<label>Username</label><input id="u" autocomplete="username" autofocus>' +
     '<label>Password</label><input id="p" type="password" autocomplete="current-password">' +
     '<button>Sign in</button><p id="loginerr" class="err"></p>' +
-    '<p class="muted">Demo users: admin, planner, auditor, engineer.b1, engineer.b2. ' +
-    'Demo password: Passw0rd!demo (prototype only).</p></form>';
+    '</form>';
   document.getElementById('login').onsubmit = async (ev) => {
     ev.preventDefault();
     try {
