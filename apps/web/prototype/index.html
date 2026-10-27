@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AeroGuard</title>
+<style>
+body{margin:0;font-family:system-ui,"Segoe UI",sans-serif;background:#0f172a;color:#e2e8f0}
+#app{max-width:1100px;margin:0 auto;padding:16px}
+header.top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+.tabs{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap}
+button{padding:8px 14px;border:0;border-radius:6px;cursor:pointer;background:#334155;color:#fff;font:inherit}
+button.active{background:#0ea5a4}
+button:disabled{opacity:.5;cursor:not-allowed}
+button.ok{background:#16a34a}button.no{background:#dc2626}button.def{background:#d97706}
+input,select{width:100%;padding:8px;margin:6px 0;box-sizing:border-box;border-radius:6px;border:1px solid #475569;background:#0b1220;color:#e2e8f0;font:inherit}
+.card{background:#1e293b;border-radius:8px;padding:14px;margin-bottom:14px}
+.login{max-width:360px;margin:60px auto}
+.tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;margin-bottom:16px}
+.tile{display:flex;flex-direction:column;gap:4px;text-align:left;background:#1e293b;border-left:5px solid #64748b;padding:12px}
+.tile .big{font-size:30px;font-weight:700}
+.good{border-left-color:#22c55e}.warn{border-left-color:#f59e0b}.bad{border-left-color:#ef4444}
+.cols{display:grid;grid-template-columns:1fr 1.3fr;gap:14px}
+@media(max-width:800px){.cols{grid-template-columns:1fr}}
+.row{padding:10px;border-radius:6px;margin-bottom:8px;background:#0f172a;cursor:pointer}
+.row.sel{outline:2px solid #38bdf8}
+.tag{font-size:12px;padding:2px 8px;border-radius:10px;background:#475569;margin-left:6px}
+.p-AOG_RISK{background:#b91c1c}.p-HIGH{background:#c2410c}.p-MEDIUM{background:#a16207}
+.muted{color:#94a3b8;font-size:13px}
+.err{color:#fca5a5}
+.t-good{color:#4ade80}.t-warn{color:#fbbf24}.t-bad{color:#f87171}
+.notice{margin:10px 0;padding:8px 12px;border-radius:6px;display:none}
+.notice.ok{display:block;background:#14532d}.notice.bad{display:block;background:#7f1d1d}
+table{width:100%;border-collapse:collapse}
+th,td{padding:8px;border-bottom:1px solid #334155;text-align:left;vertical-align:top}
+.actions{display:flex;gap:8px;margin-top:6px;flex-wrap:wrap}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div id="notice" class="notice"></div>
+<script src="app.js"></script>
+</body>
+</html>

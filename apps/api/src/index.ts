@@ -3,6 +3,7 @@ import { Redis } from 'ioredis';
 import mongoose from 'mongoose';
 import { pino } from 'pino';
 import { createApp } from './app.js';
+import { runComplianceCheck } from './modules/compliance/compliance.service.js';
 import { loadEnv } from './config/env.js';
 import { HEARTBEAT_KEY } from '@aeroguard/shared';
 
@@ -72,6 +73,13 @@ const server = app.listen(env.API_PORT, () => {
   logger.info({ port: env.API_PORT }, 'api listening');
 });
 
+// Compliance check: marks overdue items and lists items due soon (30s after startup, then every 6 hours).
+const complianceCheck = () =>
+  runComplianceCheck()
+    .then((r) => logger.info({ created: r.created, markedOverdue: r.markedOverdue, dueSoon: r.dueSoon.length }, 'compliance check'))
+    .catch((err) => logger.warn({ err: (err as Error).message }, 'compliance check failed'));
+setTimeout(() => void complianceCheck(), 30_000).unref();
+setInterval(() => void complianceCheck(), 6 * 3_600_000).unref();
 async function shutdown(signal: string) {
   if (stopping) return;
   stopping = true;

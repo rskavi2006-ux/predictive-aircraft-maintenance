@@ -16,7 +16,9 @@
     "test": "npm test --workspaces --if-present",
     "typecheck": "npm run typecheck --workspaces --if-present",
     "dev:api": "npm run dev -w @aeroguard/api",
-    "dev:worker": "npm run dev -w @aeroguard/worker"
+    "dev:worker": "npm run dev -w @aeroguard/worker",
+    "seed": "npm run seed -w @aeroguard/api",
+    "web": "node apps/web/prototype/serve.mjs"
   },
   "type": "module",
   "devDependencies": {
