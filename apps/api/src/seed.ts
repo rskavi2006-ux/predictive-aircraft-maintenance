@@ -17,7 +17,7 @@ try {
 
 if (process.env.NODE_ENV === 'production') throw new Error('Refusing to seed in production');
 
-const DEMO_PASSWORD = '12345'; // local demo only
+const DEMO_PASSWORD = process.env.DEMO_PASSWORD ?? '12345'; // local demo; set DEMO_PASSWORD for a public database
 const STATIONS = ['MAA', 'BLR', 'DEL', 'HYD', 'BOM'];
 
 interface Template {

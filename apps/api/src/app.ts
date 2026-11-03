@@ -1,3 +1,5 @@
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import cors from 'cors';
 import express from 'express';
 import helmet from 'helmet';
@@ -47,6 +49,10 @@ export function createApp(deps: AppDeps) {
   app.use('/api/v1/scheduling', schedulingRouter());
   app.use('/api/v1/work-orders', workOrdersRouter());
   app.use('/api/v1/compliance', complianceRouter());
+
+  // Serve the web screens from the same origin (used when deployed).
+  const webRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../web/prototype');
+  app.use(express.static(webRoot));
 
   app.use(notFound);
   app.use(errorHandler(deps.logger));
