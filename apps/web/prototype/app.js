@@ -1,6 +1,7 @@
 // AeroGuard prototype UI: plain JavaScript, no build step. It talks to the real API.
 // Tab files (tabs-*.js) register themselves with registerTab().
-const API = 'http://localhost:4000/api/v1';
+// Local: page on port 5173, API on 4000. Deployed: both share one address.
+const API = location.port === '5173' ? 'http://localhost:4000/api/v1' : '/api/v1';
 const TABS = [];
 const state = {
   token: sessionStorage.getItem('ag_token'),
